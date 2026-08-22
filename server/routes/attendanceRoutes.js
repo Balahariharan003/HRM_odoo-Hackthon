@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const attendanceController = require('../controllers/attendanceController');
-const { authMiddleware, checkRole } = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
+const { checkRole } = require('../middleware/roleMiddleware');
 
 // User self-service attendance routes
 router.post('/check-in', authMiddleware, attendanceController.checkIn);

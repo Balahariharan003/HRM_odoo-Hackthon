@@ -8,7 +8,8 @@ const { createNotification } = require('../utils/notifications');
  */
 const applyLeave = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
     const { leaveType, startDate, endDate, reason, halfDay, halfDaySession } = req.body;
 
     if (!leaveType || !startDate || !endDate || !reason) {
@@ -70,7 +71,8 @@ const applyLeave = async (req, res) => {
  */
 const getMyLeaves = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
     const { status, year } = req.query;
 
     const where = { userId };
@@ -116,6 +118,9 @@ const getMyLeaves = async (req, res) => {
  */
 const getAllLeaveRequests = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const { status = 'Pending', department, page = 1, limit = 10 } = req.query;
 
     const pageNum = parseInt(page, 10) || 1;
@@ -141,6 +146,7 @@ const getAllLeaveRequests = async (req, res) => {
           include: [
             {
               model: Profile,
+              as: 'profile',
               attributes: ['employeeId', 'department', 'designation'],
               where: department ? profileWhere : undefined,
               required: department ? true : false,
@@ -188,6 +194,9 @@ const getAllLeaveRequests = async (req, res) => {
  */
 const approveLeave = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const leaveId = req.params.leaveId || req.params.id;
     const { action, status, comments, remarks } = req.body;
 
@@ -211,8 +220,9 @@ const approveLeave = async (req, res) => {
     const finalComments = comments || remarks || '';
 
     leave.status = finalStatus;
-    if (req.user && req.user.id) {
-      leave.approvedBy = req.user.id;
+    const approverId = req.user?.userId || req.user?.id;
+    if (approverId) {
+      leave.approvedBy = approverId;
     }
     leave.approvedAt = new Date();
     if (finalComments) {
@@ -254,8 +264,10 @@ const approveLeave = async (req, res) => {
  */
 const cancelLeave = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const leaveId = req.params.leaveId || req.params.id;
-    const userId = req.user.id;
 
     const leave = await Leave.findOne({
       where: {

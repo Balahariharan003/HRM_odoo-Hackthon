@@ -6,7 +6,7 @@ const { Notification } = require('../models');
  */
 const getMyNotifications = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId || req.user?.id;
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.max(1, parseInt(req.query.limit) || 10);
     const offset = (page - 1) * limit;
@@ -47,7 +47,7 @@ const getMyNotifications = async (req, res) => {
 const markAsRead = async (req, res) => {
   try {
     const { notificationId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user?.userId || req.user?.id;
 
     const notification = await Notification.findOne({
       where: { id: notificationId, userId },
@@ -75,7 +75,7 @@ const markAsRead = async (req, res) => {
  */
 const markAllAsRead = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId || req.user?.id;
 
     await Notification.update(
       { isRead: true },

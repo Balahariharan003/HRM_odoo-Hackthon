@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const leaveController = require('../controllers/leaveController');
-const { authMiddleware, checkRole } = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
+const { checkRole } = require('../middleware/roleMiddleware');
 
 // Employee self-service leave routes
 router.post('/apply', authMiddleware, leaveController.applyLeave);

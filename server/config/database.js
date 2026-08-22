@@ -1,0 +1,14 @@
+const { Sequelize } = require('sequelize');
+const path = require('path');
+
+const storagePath = process.env.DB_PATH 
+  ? path.resolve(__dirname, '..', process.env.DB_PATH)
+  : (process.env.DB_STORAGE || path.join(__dirname, '../database.sqlite'));
+
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: storagePath,
+  logging: false,
+});
+
+module.exports = sequelize;

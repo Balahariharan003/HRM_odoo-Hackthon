@@ -168,7 +168,10 @@ exports.login = async (req, res, next) => {
 
 exports.getMe = async (req, res, next) => {
   try {
-    const user = await User.findByPk(req.user.userId, {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+    const user = await User.findByPk(userId, {
       attributes: { exclude: ['password', 'verificationToken', 'resetPasswordToken'] },
       include: [
         {

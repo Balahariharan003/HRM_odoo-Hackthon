@@ -6,7 +6,7 @@ const { User, Profile } = require('../models');
 // ─────────────────────────────────────────────
 exports.getMyProfile = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.user?.userId || req.user?.id;
     const user = await User.findByPk(userId, {
       attributes: { exclude: ['password', 'verificationToken', 'resetPasswordToken'] },
       include: [{ model: Profile, as: 'profile' }],
@@ -110,7 +110,7 @@ const mergeDocuments = (currentDocuments, newFiles, removedDocNames) => {
 // ─────────────────────────────────────────────
 exports.updateMyProfile = async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.user?.userId || req.user?.id;
     const role = req.user.role;
 
     const profile = await Profile.findOne({ where: { userId } });

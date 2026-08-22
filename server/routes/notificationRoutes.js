@@ -5,7 +5,7 @@ const {
   markAsRead,
   markAllAsRead,
 } = require('../controllers/notificationController');
-const { authMiddleware } = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
 // Get current user's notifications
 router.get('/', authMiddleware, getMyNotifications);

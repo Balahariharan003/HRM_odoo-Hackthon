@@ -8,7 +8,9 @@ const { Op } = require('sequelize');
  */
 const getMyPayroll = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const currentDate = new Date();
     const month = parseInt(req.query.month) || (currentDate.getMonth() + 1);
     const year = parseInt(req.query.year) || currentDate.getFullYear();
@@ -22,6 +24,7 @@ const getMyPayroll = async (req, res) => {
           include: [
             {
               model: Profile,
+              as: 'profile',
               attributes: ['employeeId', 'department', 'designation'],
             },
           ],
@@ -49,6 +52,9 @@ const getMyPayroll = async (req, res) => {
  */
 const getAllPayroll = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.max(1, parseInt(req.query.limit) || 10);
     const offset = (page - 1) * limit;
@@ -71,6 +77,7 @@ const getAllPayroll = async (req, res) => {
           include: [
             {
               model: Profile,
+              as: 'profile',
               attributes: ['employeeId', 'department', 'designation'],
               where: Object.keys(profileWhere).length ? profileWhere : undefined,
               required: Object.keys(profileWhere).length > 0,
@@ -112,6 +119,9 @@ const getAllPayroll = async (req, res) => {
  */
 const updateSalaryStructure = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const { employeeId } = req.params;
     const { basic: inputBasic, hra: inputHra, allowances: inputAllowances, deductions: inputDeductions, effectiveDate } = req.body;
 
@@ -206,6 +216,9 @@ const updateSalaryStructure = async (req, res) => {
  */
 const processMonthlyPayroll = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const currentDate = new Date();
     const month = parseInt(req.body.month) || (currentDate.getMonth() + 1);
     const year = parseInt(req.body.year) || currentDate.getFullYear();
@@ -310,6 +323,9 @@ const processMonthlyPayroll = async (req, res) => {
  */
 const downloadPayslip = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const { payrollId } = req.params;
 
     const payroll = await Payroll.findByPk(payrollId, {
@@ -320,6 +336,7 @@ const downloadPayslip = async (req, res) => {
           include: [
             {
               model: Profile,
+              as: 'profile',
               attributes: ['employeeId', 'department', 'designation'],
             },
           ],
@@ -331,7 +348,7 @@ const downloadPayslip = async (req, res) => {
       return res.status(404).json({ message: 'Payroll record not found' });
     }
 
-    const isOwner = payroll.userId === req.user.id;
+    const isOwner = payroll.userId === (req.user?.userId || req.user?.id);
     const isAdminOrHR = ['Admin', 'HR_Officer'].includes(req.user.role);
 
     if (!isOwner && !isAdminOrHR) {

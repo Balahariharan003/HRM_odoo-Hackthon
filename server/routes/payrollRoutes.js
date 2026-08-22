@@ -7,7 +7,8 @@ const {
   processMonthlyPayroll,
   downloadPayslip,
 } = require('../controllers/payrollController');
-const { authMiddleware, checkRole } = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
+const { checkRole } = require('../middleware/roleMiddleware');
 
 // User's own payroll
 router.get('/me', authMiddleware, getMyPayroll);

@@ -38,7 +38,7 @@ const getAttendanceReport = async (req, res) => {
       include: [
         {
           model: User,
-          include: [{ model: Profile }],
+          include: [{ model: Profile, as: 'profile' }],
         },
       ],
     });
@@ -147,7 +147,7 @@ const getLeaveReport = async (req, res) => {
       include: [
         {
           model: User,
-          include: [{ model: Profile }],
+          include: [{ model: Profile, as: 'profile' }],
         },
       ],
     });
@@ -244,7 +244,7 @@ const getPayrollReport = async (req, res) => {
       include: [
         {
           model: User,
-          include: [{ model: Profile }],
+          include: [{ model: Profile, as: 'profile' }],
         },
       ],
     });

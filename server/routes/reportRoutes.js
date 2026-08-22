@@ -6,7 +6,8 @@ const {
   getPayrollReport,
   getDashboardAnalytics,
 } = require('../controllers/reportController');
-const { authMiddleware, checkRole } = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
+const { checkRole } = require('../middleware/roleMiddleware');
 
 const adminOrHR = checkRole(['Admin', 'HR_Officer']);
 

@@ -1,25 +1,24 @@
-const React = require('react');
-const { useState, useEffect, useMemo } = React;
-const { 
-  Users, 
-  UserCheck, 
-  UserX, 
-  Calendar, 
-  Clock, 
-  Filter, 
-  Search, 
-  Edit3, 
-  Loader2, 
-  ChevronLeft, 
-  ChevronRight, 
-  X, 
-  Save, 
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  Users,
+  UserCheck,
+  UserX,
+  Calendar,
+  Clock,
+  Filter,
+  Search,
+  Edit3,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Save,
   AlertTriangle,
   Building,
   Coffee
-} = require('lucide-react');
-const attendanceService = require('../../services/attendanceService').default;
-const Toast = require('../../components/Toast').default;
+} from 'lucide-react';
+import attendanceService from '../../services/attendanceService';
+import Toast from '../../components/Toast';
 
 const AdminAttendance = () => {
   const getTodayStr = () => {

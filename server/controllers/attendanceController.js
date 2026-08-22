@@ -25,7 +25,8 @@ const getCurrentTime = () => {
  */
 const checkIn = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
     const today = getTodayDate();
     const currentTime = getCurrentTime();
 
@@ -64,7 +65,8 @@ const checkIn = async (req, res) => {
  */
 const checkOut = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
     const today = getTodayDate();
     const currentTime = getCurrentTime();
 
@@ -108,7 +110,8 @@ const checkOut = async (req, res) => {
  */
 const getMyAttendance = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
     const { startDate, endDate, view } = req.query;
 
     let start = startDate;
@@ -171,6 +174,9 @@ const getMyAttendance = async (req, res) => {
  */
 const getAllAttendance = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const { date, employeeId, department, status, page = 1, limit = 10 } = req.query;
 
     const pageNum = parseInt(page, 10) || 1;
@@ -194,6 +200,7 @@ const getAllAttendance = async (req, res) => {
           include: [
             {
               model: Profile,
+              as: 'profile',
               attributes: ['employeeId', 'department', 'designation'],
               where: department ? profileWhere : undefined,
               required: department ? true : false,
@@ -235,6 +242,9 @@ const getAllAttendance = async (req, res) => {
  */
 const updateAttendance = async (req, res) => {
   try {
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
     const attendanceId = req.params.attendanceId || req.params.id;
     const { checkIn, checkOut, status, notes, location, date } = req.body;
 
