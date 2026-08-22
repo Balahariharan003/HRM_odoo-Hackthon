@@ -1,0 +1,21 @@
+{
+  "name": "dayflow-hrms-server",
+  "version": "1.0.0",
+  "description": "Dayflow HRMS Server",
+  "main": "models/index.js",
+  "scripts": {
+    "sync": "node scripts/syncDb.js",
+    "seed": "node scripts/seedAttendance.js",
+    "test": "node scripts/testModels.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "sequelize": "^6.37.5",
+    "sqlite3": "^5.1.7"
+  }
+}
