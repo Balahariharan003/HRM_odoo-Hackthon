@@ -23,11 +23,11 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       checkIn: {
-        type: DataTypes.TIME,
+        type: DataTypes.STRING,
         allowNull: true,
       },
       checkOut: {
-        type: DataTypes.TIME,
+        type: DataTypes.STRING,
         allowNull: true,
       },
       totalHours: {
@@ -35,8 +35,8 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
       status: {
-        type: DataTypes.ENUM('Present', 'Absent', 'Half-day', 'Leave'),
-        defaultValue: 'Absent',
+        type: DataTypes.ENUM('Present', 'Absent', 'Half-day', 'HalfDay', 'Leave'),
+        defaultValue: 'Present',
       },
       location: {
         type: DataTypes.STRING,
@@ -54,7 +54,7 @@ module.exports = (sequelize) => {
         {
           unique: true,
           fields: ['userId', 'date'],
-          name: 'unique_user_date',
+          name: 'unique_user_attendance_date_idx',
         },
       ],
       hooks: {

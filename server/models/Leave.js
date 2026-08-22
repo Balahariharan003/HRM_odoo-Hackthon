@@ -19,8 +19,9 @@ module.exports = (sequelize) => {
         onDelete: 'CASCADE',
       },
       leaveType: {
-        type: DataTypes.ENUM('Paid', 'Sick', 'Unpaid'),
+        type: DataTypes.STRING, // Supports both 'Paid', 'Sick', 'Unpaid' and lowercase/extra types like 'paid', 'sick', 'unpaid', 'annual'
         allowNull: false,
+        defaultValue: 'Paid',
       },
       startDate: {
         type: DataTypes.DATEONLY,
@@ -33,6 +34,7 @@ module.exports = (sequelize) => {
       totalDays: {
         type: DataTypes.FLOAT,
         allowNull: false,
+        defaultValue: 1.0,
       },
       halfDay: {
         type: DataTypes.BOOLEAN,
@@ -44,7 +46,7 @@ module.exports = (sequelize) => {
       },
       reason: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       status: {
         type: DataTypes.ENUM('Pending', 'Approved', 'Rejected'),

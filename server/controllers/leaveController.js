@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
 const { Leave, User, Profile } = require('../models');
+const { createNotification } = require('../utils/notifications');
 
 /**
  * 1. applyLeave
@@ -188,9 +189,17 @@ const getAllLeaveRequests = async (req, res) => {
 const approveLeave = async (req, res) => {
   try {
     const leaveId = req.params.leaveId || req.params.id;
-    const { action, comments } = req.body;
+    const { action, status, comments, remarks } = req.body;
 
-    const leave = await Leave.findByPk(leaveId);
+    const finalStatus = status || action || 'Approved';
+    if (!['Approved', 'Rejected'].includes(finalStatus)) {
+      return res.status(400).json({ message: 'Invalid status. Must be Approved or Rejected.' });
+    }
+
+    const leave = await Leave.findByPk(leaveId, {
+      include: [{ model: User, attributes: ['id', 'name', 'email'] }],
+    });
+
     if (!leave) {
       return res.status(404).json({ message: 'Leave request not found' });
     }
@@ -199,14 +208,35 @@ const approveLeave = async (req, res) => {
       return res.status(400).json({ message: 'Leave request has already been processed' });
     }
 
-    const finalStatus = action === 'Rejected' ? 'Rejected' : 'Approved';
+    const finalComments = comments || remarks || '';
 
     leave.status = finalStatus;
-    leave.approvedBy = req.user.id;
+    if (req.user && req.user.id) {
+      leave.approvedBy = req.user.id;
+    }
     leave.approvedAt = new Date();
-    if (comments) leave.comments = comments;
+    if (finalComments) {
+      leave.comments = finalComments;
+    }
 
     await leave.save();
+
+    // Trigger Notification
+    const notificationType = finalStatus === 'Approved' ? 'leave_approved' : 'leave_rejected';
+    const notificationTitle = finalStatus === 'Approved' ? 'Leave Request Approved' : 'Leave Request Rejected';
+    const notificationMessage = `Your leave request from ${leave.startDate} to ${leave.endDate} has been ${finalStatus.toLowerCase()}.${finalComments ? ' Remarks: ' + finalComments : ''}`;
+
+    try {
+      await createNotification({
+        userId: leave.userId,
+        type: notificationType,
+        title: notificationTitle,
+        message: notificationMessage,
+        link: '/leave/my-leaves',
+      });
+    } catch (notifErr) {
+      console.error('Error triggering notification:', notifErr.message);
+    }
 
     return res.status(200).json({
       message: `Leave request ${finalStatus.toLowerCase()} successfully`,
@@ -214,7 +244,7 @@ const approveLeave = async (req, res) => {
     });
   } catch (error) {
     console.error('Error in approveLeave:', error);
-    return res.status(500).json({ message: 'Server error approving/rejecting leave', error: error.message });
+    return res.status(500).json({ message: 'Error processing leave request', error: error.message });
   }
 };
 

@@ -26,6 +26,7 @@ module.exports = (sequelize) => {
       department: {
         type: DataTypes.STRING,
         allowNull: true,
+        defaultValue: 'General',
       },
       designation: {
         type: DataTypes.STRING,
@@ -33,6 +34,15 @@ module.exports = (sequelize) => {
       },
       phone: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'Active',
+      },
+      salaryStructure: {
+        type: DataTypes.JSON,
         allowNull: true,
       },
     },

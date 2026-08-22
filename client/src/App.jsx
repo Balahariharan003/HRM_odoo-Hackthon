@@ -9,11 +9,23 @@ import LeaveStatus from './pages/leave/LeaveStatus';
 import LeaveApproval from './pages/leave/LeaveApproval';
 import LoginView from './pages/auth/LoginView';
 
+// Module 3 imports
+import PayrollView from './pages/payroll/PayrollView';
+import PayrollAdmin from './pages/payroll/PayrollAdmin';
+import ReportsDashboard from './pages/reports/ReportsDashboard';
+import './App.css';
+
 const App = () => {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
+
+  const [toastMessage, setToastMessage] = useState(null);
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -114,6 +126,48 @@ const App = () => {
               <Navigate to={user ? "/attendance" : "/login"} replace />
             )
           }
+        />
+
+        {/* Module 3: Payroll Routes */}
+        <Route
+          path="/payroll"
+          element={
+            user ? (
+              <Layout user={user} onLogout={handleLogout}>
+                <PayrollView showToast={showToast} />
+              </Layout>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/admin/payroll"
+          element={
+            user && isAdminOrHR ? (
+              <Layout user={user} onLogout={handleLogout}>
+                <PayrollAdmin showToast={showToast} />
+              </Layout>
+            ) : (
+              <Navigate to={user ? "/payroll" : "/login"} replace />
+            )
+          }
+        />
+        <Route
+          path="/admin/reports"
+          element={
+            user && isAdminOrHR ? (
+              <Layout user={user} onLogout={handleLogout}>
+                <ReportsDashboard showToast={showToast} />
+              </Layout>
+            ) : (
+              <Navigate to={user ? "/payroll" : "/login"} replace />
+            )
+          }
+        />
+        <Route
+          path="/reports"
+          element={<Navigate to="/admin/reports" replace />}
         />
 
         {/* Default / Fallback Routes */}
