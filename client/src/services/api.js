@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Add request interceptor to attach JWT token
+// Request Interceptor: Attach Token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -19,14 +19,18 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Add response interceptor for global auth error handling
+// Response Interceptor: Handle 401 Unauthorized
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Token expired or invalid
+      // Clear expired or invalid token
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/signin' && currentPath !== '/signup' && currentPath !== '/verify-email') {
+        window.location.href = '/signin';
+      }
     }
     return Promise.reject(error);
   }
