@@ -55,7 +55,7 @@ const EmployeeDashboard = () => {
       iconBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
       hoverBorder: 'hover:border-emerald-500/50',
       badge: 'Coming Soon',
-      action: () => navigate('/leave'),
+      action: () => navigate('/leave/my-leaves'),
     },
     {
       id: 'logout',

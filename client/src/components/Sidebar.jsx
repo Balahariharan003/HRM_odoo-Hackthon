@@ -6,7 +6,7 @@ export default function Sidebar() {
   const employeeItems = [
     { path: '/payroll', label: 'My Payroll', icon: DollarSign },
     { path: '/attendance', label: 'My Attendance', icon: Clock },
-    { path: '/leave', label: 'My Leave', icon: Calendar },
+    { path: '/leave/my-leaves', label: 'My Leave', icon: Calendar },
     { path: '/notifications', label: 'Notifications', icon: Bell },
   ];
 

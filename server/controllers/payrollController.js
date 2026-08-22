@@ -20,12 +20,12 @@ const getMyPayroll = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'name', 'email', 'role'],
+          attributes: ['id', 'employeeId', 'email', 'role'],
           include: [
             {
               model: Profile,
               as: 'profile',
-              attributes: ['employeeId', 'department', 'designation'],
+              attributes: ['firstName', 'lastName', 'department', 'designation'],
             },
           ],
         },
@@ -73,12 +73,12 @@ const getAllPayroll = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'name', 'email', 'role'],
+          attributes: ['id', 'employeeId', 'email', 'role'],
           include: [
             {
               model: Profile,
               as: 'profile',
-              attributes: ['employeeId', 'department', 'designation'],
+              attributes: ['firstName', 'lastName', 'department', 'designation'],
               where: Object.keys(profileWhere).length ? profileWhere : undefined,
               required: Object.keys(profileWhere).length > 0,
             },
@@ -92,11 +92,13 @@ const getAllPayroll = async (req, res) => {
 
     const formattedPayrolls = rows.map((p) => {
       const pData = p.toJSON();
+      const prof = pData.User?.profile;
+      const fullName = prof ? `${prof.firstName || ''} ${prof.lastName || ''}`.trim() : '';
       return {
         ...pData,
-        employeeName: pData.User ? pData.User.name : 'N/A',
-        employeeId: pData.User && pData.User.Profile ? pData.User.Profile.employeeId : 'N/A',
-        department: pData.User && pData.User.Profile ? pData.User.Profile.department : 'N/A',
+        employeeName: fullName || (pData.User ? pData.User.email : 'N/A'),
+        employeeId: pData.User ? pData.User.employeeId : 'N/A',
+        department: prof ? prof.department : 'N/A',
         payslipUrl: `/api/payroll/payslip/${pData.id}`,
       };
     });
@@ -332,12 +334,12 @@ const downloadPayslip = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'name', 'email', 'role'],
+          attributes: ['id', 'employeeId', 'email', 'role'],
           include: [
             {
               model: Profile,
               as: 'profile',
-              attributes: ['employeeId', 'department', 'designation'],
+              attributes: ['firstName', 'lastName', 'department', 'designation'],
             },
           ],
         },
@@ -355,12 +357,15 @@ const downloadPayslip = async (req, res) => {
       return res.status(403).json({ message: 'Access denied to this payslip' });
     }
 
+    const prof = payroll.User?.profile;
+    const fullName = prof ? `${prof.firstName || ''} ${prof.lastName || ''}`.trim() : '';
+
     const payslipData = {
       payrollId: payroll.id,
-      employeeName: payroll.User ? payroll.User.name : 'N/A',
-      employeeId: payroll.User && payroll.User.Profile ? payroll.User.Profile.employeeId : 'N/A',
-      department: payroll.User && payroll.User.Profile ? payroll.User.Profile.department : 'N/A',
-      designation: payroll.User && payroll.User.Profile ? payroll.User.Profile.designation : 'N/A',
+      employeeName: fullName || (payroll.User ? payroll.User.email : 'N/A'),
+      employeeId: payroll.User ? payroll.User.employeeId : 'N/A',
+      department: prof ? prof.department : 'N/A',
+      designation: prof ? prof.designation : 'N/A',
       month: payroll.month,
       year: payroll.year,
       earnings: {

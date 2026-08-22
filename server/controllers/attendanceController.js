@@ -196,12 +196,12 @@ const getAllAttendance = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'name', 'email', 'role'],
+          attributes: ['id', 'employeeId', 'email', 'role'],
           include: [
             {
               model: Profile,
               as: 'profile',
-              attributes: ['employeeId', 'department', 'designation'],
+              attributes: ['firstName', 'lastName', 'department', 'designation'],
               where: department ? profileWhere : undefined,
               required: department ? true : false,
             },
@@ -215,11 +215,13 @@ const getAllAttendance = async (req, res) => {
 
     const formattedRecords = rows.map((rec) => {
       const json = rec.toJSON();
+      const prof = json.User?.profile;
+      const fullName = prof ? `${prof.firstName || ''} ${prof.lastName || ''}`.trim() : '';
       return {
         ...json,
-        employeeName: json.User ? json.User.name : null,
-        department: json.User && json.User.Profile ? json.User.Profile.department : null,
-        employeeCode: json.User && json.User.Profile ? json.User.Profile.employeeId : null,
+        employeeName: fullName || (json.User ? json.User.email : null),
+        department: prof ? prof.department : null,
+        employeeCode: json.User ? json.User.employeeId : null,
       };
     });
 

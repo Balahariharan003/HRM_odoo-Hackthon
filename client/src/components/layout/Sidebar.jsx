@@ -24,16 +24,18 @@ const Sidebar = ({ isOpen, onClose }) => {
   const employeeNavItems = [
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { label: 'My Profile', path: '/profile', icon: User },
-    { label: 'Attendance', path: '/attendance', icon: Clock, badge: 'Soon' },
-    { label: 'Leave Request', path: '/leave', icon: CalendarDays, badge: 'Soon' },
+    { label: 'Attendance', path: '/attendance', icon: Clock },
+    { label: 'Apply Leave', path: '/leave/apply', icon: CalendarDays },
+    { label: 'My Leaves', path: '/leave/my-leaves', icon: CheckSquare },
+    { label: 'Payroll', path: '/payroll', icon: DollarSign },
   ];
 
   const adminNavItems = [
     { label: 'Admin Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
-    { label: 'Employee List', path: '/admin/dashboard', icon: Users },
-    { label: 'Attendance Records', path: '/attendance', icon: Clock, badge: 'Soon' },
-    { label: 'Leave Approvals', path: '/leave', icon: CheckSquare, badge: 'Soon' },
-    { label: 'Payroll', path: '/payroll', icon: DollarSign, badge: 'Soon' },
+    { label: 'Attendance Records', path: '/admin/attendance', icon: Clock },
+    { label: 'Leave Approvals', path: '/admin/leave/approvals', icon: CheckSquare },
+    { label: 'Payroll Admin', path: '/admin/payroll', icon: DollarSign },
+    { label: 'Reports', path: '/admin/reports', icon: Users },
     { label: 'My Profile', path: '/profile', icon: User },
   ];
 

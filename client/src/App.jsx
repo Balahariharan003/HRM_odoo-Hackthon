@@ -69,6 +69,7 @@ function AppRoutes() {
 
           {/* Module 2: Attendance & Leave Employee Routes */}
           <Route path="/attendance" element={<AttendanceView />} />
+          <Route path="/leave" element={<Navigate to="/leave/my-leaves" replace />} />
           <Route path="/leave/apply" element={<ApplyLeave />} />
           <Route path="/leave/my-leaves" element={<LeaveStatus />} />
 
@@ -82,6 +83,7 @@ function AppRoutes() {
 
             {/* Module 2: Attendance & Leave Admin Routes */}
             <Route path="/admin/attendance" element={<AdminAttendance />} />
+            <Route path="/admin/leave" element={<Navigate to="/admin/leave/approvals" replace />} />
             <Route path="/admin/leave/approvals" element={<LeaveApproval />} />
 
             {/* Module 3: Payroll & Report Admin Routes */}
