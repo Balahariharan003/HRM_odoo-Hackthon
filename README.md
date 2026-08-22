@@ -116,38 +116,6 @@ Use the following credentials to test the application:
 - **Manager**: [EMAIL_ADDRESS] / manager123
 - **Employee**: [EMAIL_ADDRESS] / employee123
 
-### API Endpoints
-
-#### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-
-#### Employees
-- `GET /api/employees` - Get all employees
-- `POST /api/employees` - Create new employee
-- `GET /api/employees/:id` - Get employee by ID
-- `PUT /api/employees/:id` - Update employee
-- `DELETE /api/employees/:id` - Delete employee
-
-#### Attendance
-- `POST /api/attendance/clock-in` - Clock in
-- `POST /api/attendance/clock-out` - Clock out
-- `GET /api/attendance/my-attendance` - Get user's attendance
-- `GET /api/attendance/report` - Get attendance report
-
-#### Leave
-- `GET /api/leave/types` - Get leave types
-- `GET /api/leave/my-leave` - Get user's leave
-- `POST /api/leave/apply` - Apply for leave
-- `GET /api/leave/requests` - Get all leave requests
-- `PUT /api/leave/requests/:id/approve` - Approve leave
-- `PUT /api/leave/requests/:id/reject` - Reject leave
-
-#### Payroll
-- `GET /api/payroll/my-payslips` - Get user's payslips
-- `GET /api/payroll/employee/:employeeId` - Get employee's payroll
-- `POST /api/payroll/generate` - Generate payroll
-- `GET /api/payroll/report` - Get payroll report
 
 ## Development
 
